@@ -71,7 +71,19 @@ public class Scanner {
                 if (match('/')){
                     // comment
                     while (peek() != '\n' && !isAtEnd()) advance();
-                } else {
+                } else if (match('*')) {
+                    // comment
+                    while (!(peek() == '*' && peekNext() == '/') && !isAtEnd()){
+                        if(peek() == '\n') line++;
+                        advance();
+                    }
+                    // consume the last */
+                    if(!isAtEnd()) {
+                        advance();
+                        advance();
+                    }
+                }
+                else {
                     addToken(SLASH);
                 }
                 break;
