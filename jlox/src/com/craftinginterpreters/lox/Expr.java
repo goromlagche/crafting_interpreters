@@ -4,10 +4,10 @@ import java.util.List;
 
 abstract class Expr {
     interface Visitor<R> {
-        R visitBinaryExpr(Binary expr);
-        R visitGroupingExpr(Grouping expr);
+        R visitBinaryExpr(Binary expr) throws RuntimeError;
+        R visitGroupingExpr(Grouping expr) throws RuntimeError;
         R visitLiteralExpr(Literal expr);
-        R visitUnaryExpr(Unary expr);
+        R visitUnaryExpr(Unary expr) throws RuntimeError;
     }
 
     static class Binary extends Expr {
@@ -17,7 +17,7 @@ abstract class Expr {
             this.right = right;
         }
 
-        <R> R accept(Visitor<R> visitor){
+        <R> R accept(Visitor<R> visitor) throws RuntimeError {
             return visitor.visitBinaryExpr(this);
         }
 
@@ -31,7 +31,7 @@ abstract class Expr {
             this.expression = expression;
         }
 
-        <R> R accept(Visitor<R> visitor){
+        <R> R accept(Visitor<R> visitor) throws RuntimeError {
             return visitor.visitGroupingExpr(this);
         }
 
@@ -56,7 +56,7 @@ abstract class Expr {
             this.right = right;
         }
 
-        <R> R accept(Visitor<R> visitor){
+        <R> R accept(Visitor<R> visitor) throws RuntimeError {
             return visitor.visitUnaryExpr(this);
         }
 
@@ -65,5 +65,5 @@ abstract class Expr {
     }
 
 
-    abstract <R> R accept(Visitor<R> visitor);
+    abstract <R> R accept(Visitor<R> visitor) throws RuntimeError;
 }

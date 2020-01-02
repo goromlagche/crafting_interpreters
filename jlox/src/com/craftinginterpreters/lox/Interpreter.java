@@ -12,7 +12,7 @@ public class Interpreter implements Expr.Visitor<Object> {
     }
 
     @Override
-    public Object visitBinaryExpr(Expr.Binary expr) {
+    public Object visitBinaryExpr(Expr.Binary expr) throws RuntimeError {
         Object left = evaluate(expr.left);
         Object right = evaluate(expr.right);
 
@@ -57,7 +57,7 @@ public class Interpreter implements Expr.Visitor<Object> {
     }
 
     @Override
-    public Object visitGroupingExpr(Expr.Grouping expr) {
+    public Object visitGroupingExpr(Expr.Grouping expr) throws RuntimeError {
         return evaluate(expr.expression);
     }
 
@@ -67,7 +67,7 @@ public class Interpreter implements Expr.Visitor<Object> {
     }
 
     @Override
-    public Object visitUnaryExpr(Expr.Unary expr) {
+    public Object visitUnaryExpr(Expr.Unary expr) throws RuntimeError {
         Object right = evaluate(expr.right);
 
         switch (expr.operator.type) {
@@ -81,16 +81,17 @@ public class Interpreter implements Expr.Visitor<Object> {
         return null;
     }
 
-    private void checkNumberOperand(Token operator, Object operand) {
-        if (operand instanceof Double) return;
-        throw new RuntimeError(operator, "Operand must be a number");
+    private void checkNumberOperand(Token operator, Object operand) throws RuntimeError {
+        if (!(operand instanceof Double)) {
+            throw new RuntimeError(operator, "Operand must be a number");
+        }
     }
 
     private void checkNumberOperands(Token operator,
-                                     Object left, Object right) {
-        if (left instanceof Double && right instanceof Double) return;
-    ​
-        throw new RuntimeError(operator, "Operands must be numbers.");
+                                     Object left, Object right) throws RuntimeError {
+        if (!(left instanceof Double && right instanceof Double)){
+            throw new RuntimeError(operator, "Operands must be numbers.");
+        }
     }
 
     private boolean isEqual(Object left, Object right) {
@@ -107,7 +108,7 @@ public class Interpreter implements Expr.Visitor<Object> {
         return true;
     }
 
-    private Object evaluate(Expr expression) {
+    private Object evaluate(Expr expression) throws RuntimeError {
         return expression.accept(this);
     }
 

@@ -2,7 +2,7 @@ package com.craftinginterpreters.lox;
 
 public class AstPrinter implements Expr.Visitor<String> {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RuntimeError {
         Expr expression = new Expr.Binary(
                 new Expr.Unary(
                         new Token(TokenType.MINUS, "-", null, 1),
@@ -16,17 +16,17 @@ public class AstPrinter implements Expr.Visitor<String> {
         System.out.println(new AstPrinter().print(expression));
     }
 
-    String print(Expr expr) {
+    String print(Expr expr) throws RuntimeError {
         return expr.accept(this);
     }
 
     @Override
-    public String visitBinaryExpr(Expr.Binary expr) {
+    public String visitBinaryExpr(Expr.Binary expr) throws RuntimeError {
         return parenthesize(expr.operator.lexeme, expr.left, expr.right);
     }
 
     @Override
-    public String visitGroupingExpr(Expr.Grouping expr) {
+    public String visitGroupingExpr(Expr.Grouping expr) throws RuntimeError {
         return parenthesize("group", expr.expression);
     }
 
@@ -37,11 +37,11 @@ public class AstPrinter implements Expr.Visitor<String> {
     }
 
     @Override
-    public String visitUnaryExpr(Expr.Unary expr) {
+    public String visitUnaryExpr(Expr.Unary expr) throws RuntimeError {
         return parenthesize(expr.operator.lexeme, expr.right);
     }
 
-    private String parenthesize(String name, Expr... exprs) {
+    private String parenthesize(String name, Expr... exprs) throws RuntimeError {
         StringBuilder builder = new StringBuilder();
 
         builder.append("(").append(name);
