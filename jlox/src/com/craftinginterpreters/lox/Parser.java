@@ -95,11 +95,11 @@ public class Parser {
 
     private boolean check(TokenType tokenType) {
         if(isAtEnd()) return false;
-        return peek().tokenType == tokenType;
+        return peek().type == tokenType;
     }
 
     private boolean isAtEnd() {
-        return peek().tokenType == EOF;
+        return peek().type == EOF;
     }
 
     private Token peek() {
@@ -125,9 +125,9 @@ public class Parser {
         advance();
 
         while (!isAtEnd()) {
-            if (previous().tokenType == SEMICOLON) return;
+            if (previous().type == SEMICOLON) return;
 
-            switch (peek().tokenType) {
+            switch (peek().type) {
                 case CLASS:
                 case FUN:
                 case VAR:
